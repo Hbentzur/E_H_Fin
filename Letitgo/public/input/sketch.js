@@ -35,5 +35,6 @@ function draw() {
 
   background(220, 220, 220);
   socket.emit('data',test);
+  console.log("hey");
 
 }
