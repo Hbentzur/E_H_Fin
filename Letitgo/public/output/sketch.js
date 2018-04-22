@@ -11,22 +11,18 @@ let users = {};
 let sayhey = "loading";
 
 function preload() {
-  myFont = loadFont('BIG JOHN.otf');
+  //myFont = loadFont('Roberto');
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
+  // Catch input message
   socket.on('message', function(message) {
     sayhey = message.data;
   });
-  console.log(sayhey);
 }
 
-function draw() {
-  background(240, 240, 240);
-  textSize(120);
-  textFont(myFont);
-  text(sayhey, windowWidth / 2, windowHeight / 2);
-
+function draw(){
+    //console.log(sayhey);
 }

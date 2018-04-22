@@ -3,24 +3,18 @@ html, body {
   padding: 0;
 }
 /*
-html {
-  font-family: sans-serif;
-} */
+
 
 p {
+  font-family: 'Roboto', sans-serif;
   padding: 5px;
   margin: 10px;
   line-height: 2;
   text-align: center;
   display: inline-block;
-  font-family: 2em "BIG JOHN";
-}
-
-div {
-text-align: center;
 }
 
 @font-face {
-    font-family: 'BIG JOHN';
-    src: local('BIG JOHN.otf'),
-}
+  font-family: 'Roboto', sans-serif;
+  font-style: bold;
+} */

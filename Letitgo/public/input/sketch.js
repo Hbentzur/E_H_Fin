@@ -24,6 +24,16 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
+    //First screen
+    background(240, 240, 240);
+    textSize(120);
+    text("take a picture of something you don't need anymore", windowWidth / 2, windowHeight / 2);
+
+    // Button that takes you from Instructions to Picmode
+    firstbutton = createButton("I'm ready");
+    firstbutton.mousePressed(Picmode);
+    firstbutton.position(windowWidth / 2, windowHeight - 100);
+
   // Remove disconnected users
   socket.on('disconnected', function(id) {
     delete users[id];
@@ -31,10 +41,16 @@ function setup() {
 
 }
 
+
+function Picmode() {
+  firstbutton.hide();
+
+  background(240, 240, 240);
+  textSize(120);
+  text("pic", windowWidth / 2, windowHeight / 2);
+}
+
+
 function draw() {
-
-  background(220, 220, 220);
-  socket.emit('data',test);
-  console.log("hey");
-
+  socket.emit('data', test);
 }
