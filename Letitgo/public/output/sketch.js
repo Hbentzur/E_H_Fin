@@ -13,7 +13,7 @@ let users = {};
 let sayhey = "loading";
 
 function preload() {
-  //myFont = loadFont('Roberto');
+  myFont = loadFont('DIN BLACK.ttf');
 }
 
 function setup() {
@@ -25,8 +25,11 @@ function setup() {
   });
 
   // Catch input file
-  ss(socket).on('file', function(file) {
-    console.log("file is here");
+  // ss(socket).on('file', function(file) {
+  //   console.log("file is here");
+  // });
+  socket.on('image', function(filename){
+    console.log(filename);
   });
 }
 

@@ -13,13 +13,15 @@ let users = {};
 
 // Test word, just to make sure the connection between input and output is working
 let test = "Is it?";
-let testimg = "I will be a photo one day";
 
 // Streeming bears
 let bears;
 
+// Video
+let video;
+
 function preload() {
-  myFont = loadFont('BIG JOHN.otf');
+  myFont = loadFont('DIN BLACK.ttf');
   bears = loadImage("./bears.jpeg");
 }
 
@@ -27,60 +29,50 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
 
   //First screen
-  background(240, 240, 240);
-  textSize(120);
-  text("take a picture of something you don't need anymore", windowWidth / 2, windowHeight / 2);
+  background(40, 40, 40);
+  textSize(40);
+  textFont(myFont);
+  textAlign(CENTER);
+  fill(250, 200, 200);
+  text("Take a picture \nof something \nyou don't need \nanymore.", windowWidth / 2, windowHeight / 2 - 30);
 
   // Button that takes you from Instructions to Picmode
   firstbutton = createButton("I'm ready");
   firstbutton.mousePressed(Picmode);
-  firstbutton.position(windowWidth / 2, windowHeight - 100);
+  firstbutton.position(windowWidth / 2 - 75, windowHeight - 150);
 
   // Remove disconnected users
   socket.on('disconnected', function(id) {
     delete users[id];
   });
 
-  // Leting go of all jquary
-  // let elem = document.createElement("img");
-  // elem.setAttribute("src", './MM.jpg');
-  // document.getElementById("file").appendChild(elem);
+  // Canvas to bolb
+  let canvas = document.getElementsByTagName('canvas')[0];
+  canvas.toBlob(function(file) {
+    console.log(file);
+    let stream = ss.createStream();
+    console.log(file);
 
-
-  let file = './MM.jpg';
-  let stream = ss.createStream();
-
-  // upload a file to the server.
-  ss(socket).emit('file', stream, {
-    size: file.size
-  });
-  ss.createBlobReadStream(file).pipe(stream);
-  console.log(test);
-
-  // Track upload progress
-  let blobStream = ss.createBlobReadStream(file);
-  let size = 0;
-
-  blobStream.on('data', function(chunk) {
-    size += chunk.length;
-    console.log(Math.floor(size / file.size * 100) + '%');
+    // upload a file to the server.
+    ss(socket).emit('file', stream, {
+      name: 'blob.png'
+    });
+    ss.createBlobReadStream(file).pipe(stream);
   });
 
-  blobStream.pipe(stream);
+  //Picmode
+  function Picmode() {
+    createCanvas(390, 240);
+    capture = createCapture(VIDEO);
+    //capture.size(320, 240);
+    firstbutton.hide();
+    console.log("Pic mode");
+  }
 
-}
-
-// Picmode
-function Picmode() {
-  firstbutton.hide();
-  background(240, 240, 240);
-  textSize(120);
-  text("pic", windowWidth / 2, windowHeight / 2);
 }
 
 function draw() {
   socket.emit('info', test);
-
   // See the bears
-  image(bears, 0, 0);
+  //image(bears, 0, 0);
 }

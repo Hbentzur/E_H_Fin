@@ -12,6 +12,9 @@ app.use(express.static('public'));
 // Create socket connection
 let io = require('socket.io').listen(server);
 
+// File System
+let fs = require('fs');
+
 // Streaming image
 let ss = require('socket.io-stream');
 let path = require('path');
@@ -48,10 +51,11 @@ inputs.on('connection', function(socket) {
     outputs.emit('message', message);
   });
 
-  // Listen to image events 
+  // Listen to image events
   ss(socket).on('file', function(stream, data) {
     let filename = path.basename(data.name);
-    stream.pipe(fs.createWriteStream(filename));
+    stream.pipe(fs.createWriteStream('public/output/'+ filename));
+    outputs.emit('image', filename);
   });
 
   // Listen for all client to disconnect
