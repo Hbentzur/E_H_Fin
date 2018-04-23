@@ -12,8 +12,15 @@ app.use(express.static('public'));
 // Create socket connection
 let io = require('socket.io').listen(server);
 
+// Streaming image
+let ss = require('socket.io-stream');
+let path = require('path');
+
+/* END OF SERVER SETUP */
+
 // Clients in the output namespace
 var outputs = io.of('/output');
+
 // Listen for output clients to connect
 outputs.on('connection', function(socket) {
   console.log('An output client connected: ' + socket.id);
@@ -32,13 +39,19 @@ inputs.on('connection', function(socket) {
   console.log('An input client connected: ' + socket.id);
 
   // Listen for data messages
-  socket.on('data', function(data){
+  socket.on('info', function(info) {
     let message = {
       id: socket.id,
-      data: data
+      info: info
     }
     // Send data to output clients
     outputs.emit('message', message);
+  });
+
+  // Listen to image events 
+  ss(socket).on('file', function(stream, data) {
+    let filename = path.basename(data.name);
+    stream.pipe(fs.createWriteStream(filename));
   });
 
   // Listen for all client to disconnect
@@ -47,5 +60,4 @@ inputs.on('connection', function(socket) {
     inputs.emit('disconnected', socket.id);
     outputs.emit('disconnected', socket.id);
   });
-
 });

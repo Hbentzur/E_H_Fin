@@ -6,6 +6,8 @@ socket.on('connect', function() {
   console.log("Connected");
 });
 
+/* END OF OUTPUT SETUP */
+
 // Keep track of partners
 let users = {};
 let sayhey = "loading";
@@ -19,10 +21,16 @@ function setup() {
 
   // Catch input message
   socket.on('message', function(message) {
-    sayhey = message.data;
+    sayhey = message.info;
+  });
+
+  // Catch input file
+  ss(socket).on('file', function(file) {
+    console.log("file is here");
   });
 }
 
-function draw(){
-    //console.log(sayhey);
+function draw() {
+  background(240, 240, 240);
+  text(sayhey, 100, 100);
 }
