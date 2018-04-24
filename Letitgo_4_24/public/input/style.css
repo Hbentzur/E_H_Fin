@@ -1,0 +1,22 @@
+body {
+  margin: 0px;
+  padding:0px;
+}
+
+button {
+  background-color: #282828;
+  border-color: white;
+  color: #fac8c8;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
+  margin: 4px 2px;
+  font-family: "DIN BLACK";
+}
+
+@font-face {
+  font-family: 'DIN BLACK';
+  src: local('DIN BLACK.TTF'),
+}
