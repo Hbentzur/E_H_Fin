@@ -31,6 +31,9 @@ let bears;
 let writingField;
 let userText;
 
+// Pic
+let nameOfPic;
+
 function preload() {
   myFont = loadFont('DIN BLACK.ttf');
   bears = loadImage("./bears.jpeg");
@@ -63,7 +66,12 @@ function setup() {
     delete users[id];
   });
 
-let nameOfPic = 'blob.png';
+  // Name of Pic
+  // let nameOfPic = "test" + floor(random(0,100)) + ".png";
+
+  let nameOfPic = "test" + floor(random(0,100)) + ".png";
+
+
   // Canvas to blob
   function toBlob() {
     let canvas = document.getElementsByTagName('canvas')[0];
@@ -75,7 +83,6 @@ let nameOfPic = 'blob.png';
         name: nameOfPic
       });
       ss.createBlobReadStream(file).pipe(stream);
-
     });
   }
 
@@ -84,6 +91,11 @@ let nameOfPic = 'blob.png';
     firstbutton.hide();
     console.log("Pic mode");
   }
+
+  // Remove disconnected users
+socket.on('disconnected', function(id) {
+  delete users[id];
+});
 
 }
 

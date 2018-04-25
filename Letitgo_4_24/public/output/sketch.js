@@ -11,15 +11,41 @@ socket.on('connect', function() {
 // Keep track of partners
 let users = {};
 let sayhey = "loading";
-let img;
+
+let test = "hey";
+
+let img = [];
+let i = 0;
+
+let numberOfFiles = 0;
 
 function preload() {
   myFont = loadFont('DIN BLACK.ttf');
-  img = loadImage('blob.png');
+
+  // Catch input message
+  socket.on('length', function(length) {
+    numberOfFiles = length.num;
+    console.log(numberOfFiles);
+  });
+
+  console.log("Hey, this is the num of files: " + numberOfFiles);
+
+  for (i = 0; i <= 5; i++) {
+    img[i] = loadImage('./img/' + i + "letitgo.png");
+    console.log(img[i]);
+  }
 }
 
 function setup() {
+  //Canvas
+  let canvas;
+  let w = windowWidth;
+  let h = windowHeight;
+
   createCanvas(windowWidth, windowHeight);
+  background(40, 40, 40);
+
+  socket.emit('info', test);
 
   // Catch input message
   socket.on('message', function(message) {
@@ -27,13 +53,21 @@ function setup() {
   });
 
   socket.on('image', function(filename) {
+    //this is not firing
+    console.log(img);
     console.log(filename);
-    // img = loadImage(filename);
+    console.log("hello");
   });
+
+  for (i = 0; i <= 5; i++) {
+    image(img[i], random(0, windowWidth), random(0, windowHeight), 200, 300);
+  }
+
+  // Remove disconnected users
+  socket.on('disconnected', function(id) {
+    delete users[id];
+  });
+
 }
 
-function draw() {
-  background(40, 40, 40);
-  text(sayhey, 100, 100);
-  image(img, 0, 0);
-}
+function draw() {}

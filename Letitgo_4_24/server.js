@@ -19,6 +19,8 @@ let fs = require('fs');
 let ss = require('socket.io-stream');
 let path = require('path');
 
+let filename;
+
 /* END OF SERVER SETUP */
 
 // Clients in the output namespace
@@ -31,6 +33,29 @@ outputs.on('connection', function(socket) {
   // Listen for this output client to disconnect
   socket.on('disconnect', function() {
     console.log("An output client has disconnected " + socket.id);
+  });
+
+  socket.on('info', function(info) {
+
+    let i = 0;
+    let j = 0;
+
+    for (i = 0; i <= 100; i++) {
+      for (j = 0; j <= 100; j++) {
+        fs.rename('public/output/test' + i + '.png', 'public/output/img/' + j + 'letitgo.png',
+          function(err) {
+            if (err) console.log('ERROR: ' + err);
+          });
+      }
+    }
+  });
+
+  fs.readdir('public/output/img', (err, files) => {
+    console.log("there areeeeeeeee" + files.length);
+    let length = {
+      num: files.length,
+    }
+    outputs.emit('length', length);
   });
 });
 
@@ -54,13 +79,14 @@ inputs.on('connection', function(socket) {
   // Listen to image events
   ss(socket).on('file', function(stream, data) {
     let filename = path.basename(data.name);
-    stream.pipe(fs.createWriteStream('public/output/'+ filename));
+    stream.pipe(fs.createWriteStream('public/output/' + filename));
+    console.log(filename);
     outputs.emit('image', filename);
   });
 
   // Listen for all client to disconnect
   socket.on('disconnect', function() {
-    console.log("Client has disconnected " + socket.id);
+    console.log('Client has disconnected ' + socket.id);
     inputs.emit('disconnected', socket.id);
     outputs.emit('disconnected', socket.id);
   });
