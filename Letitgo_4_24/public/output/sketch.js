@@ -19,8 +19,12 @@ let i = 0;
 
 let numberOfFiles = 0;
 
+let bgImg;
+
 function preload() {
   myFont = loadFont('DIN BLACK.ttf');
+  bgImg = loadImage('./galaxybg.jpg');
+
 
   // Catch input message
   socket.on('length', function(length) {
@@ -28,12 +32,12 @@ function preload() {
     console.log(numberOfFiles);
   });
 
-  console.log("Hey, this is the num of files: " + numberOfFiles);
-
-  for (i = 0; i <= 5; i++) {
-    img[i] = loadImage('./img/' + i + "letitgo.png");
-    console.log(img[i]);
-  }
+  // console.log("Hey, this is the num of files: " + numberOfFiles);
+  //
+  // for (i = 0; i <= 0; i++) {
+  //   img[i] = loadImage('./img/' + i + "letitgo.png");
+  //   console.log(img[i]);
+  // }
 }
 
 function setup() {
@@ -43,7 +47,9 @@ function setup() {
   let h = windowHeight;
 
   createCanvas(windowWidth, windowHeight);
-  background(40, 40, 40);
+  // background(30, 30, 30);
+  // tint(255, 127);
+  // image(bgImg, 0, 0, windowWidth, windowHeight);
 
   socket.emit('info', test);
 
@@ -57,11 +63,14 @@ function setup() {
     console.log(img);
     console.log(filename);
     console.log("hello");
+    //createImg('img/' + filename);
+    img.push(loadImage('img/' + filename));
   });
 
-  for (i = 0; i <= 5; i++) {
-    image(img[i], random(0, windowWidth), random(0, windowHeight), 200, 300);
-  }
+  // for (i = 0; i <= 0; i++) {
+  //   tint(255, 127);
+  //   image(img[i], random(0, windowWidth - 200), random(0, windowHeight - 200), 200, 290);
+  // }
 
   // Remove disconnected users
   socket.on('disconnected', function(id) {
@@ -70,4 +79,10 @@ function setup() {
 
 }
 
-function draw() {}
+function draw() {
+  background(255);
+  for (let i = 0; i < img.length; i++) {
+    tint(255, 127);
+    image(img[i], random(0, windowWidth - 200), random(0, windowHeight - 200), 200, 290);
+  }
+}

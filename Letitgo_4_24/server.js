@@ -20,6 +20,7 @@ let ss = require('socket.io-stream');
 let path = require('path');
 
 let filename;
+let f = 0;
 
 /* END OF SERVER SETUP */
 
@@ -36,52 +37,76 @@ outputs.on('connection', function(socket) {
   });
 
   socket.on('info', function(info) {
+    //
+    //   let i = 0; // incrementer
+    //   let j = 0; //
+    //
+    //   for (i = 0; i <= 100; i++) {
+    //     for (j = 0; j <= 100; j++) {
+    //       fs.rename('public/output/img/test' + i + '.png', 'public/output/img/' + j + 'letitgo.png',
+    //         function(err) {
+    //           if (err) console.log('ERROR: ' + err);
+    //         });
+    //     }
+    //   }
+    // });
+    //
+    // fs.readdir('public/output/img', (err, files) => {
+    //   console.log("there areeeeeeeee" + files.length);
+    //   let length = {
+    //     num: files.length,
+    //   }
+    //   outputs.emit('length', length);
+    // });
+  });
 
-    let i = 0;
-    let j = 0;
 
-    for (i = 0; i <= 100; i++) {
-      for (j = 0; j <= 100; j++) {
-        fs.rename('public/output/test' + i + '.png', 'public/output/img/' + j + 'letitgo.png',
-          function(err) {
-            if (err) console.log('ERROR: ' + err);
-          });
+  // Clients in the input namespace
+  let inputs = io.of('/input');
+  // Listen for input clients to connect
+  inputs.on('connection', function(socket) {
+    console.log('An input client connected: ' + socket.id);
+
+    // Listen for data messages
+    socket.on('info', function(info) {
+      let message = {
+        id: socket.id,
+        info: info
       }
-    }
-  });
+      // Send data to output clients
+      outputs.emit('message', message);
+    });
 
-  fs.readdir('public/output/img', (err, files) => {
-    console.log("there areeeeeeeee" + files.length);
-    let length = {
-      num: files.length,
-    }
-    outputs.emit('length', length);
-  });
-});
+    // Listen to image events
+    ss(socket).on('file', function(stream) {
+      let filename = f + ".png";
+      stream.pipe(fs.createWriteStream('public/output/img/' + filename));
+      console.log(filename);
+      outputs.emit('image', filename);
+      f++;
 
 
-// Clients in the input namespace
-let inputs = io.of('/input');
-// Listen for input clients to connect
-inputs.on('connection', function(socket) {
-  console.log('An input client connected: ' + socket.id);
+      // let i = 0; // incrementer
+      // let j = 0; //
+      //
+      // for (i = 0; i <= 100; i++) {
+      //   for (j = 0; j <= 100; j++) {
+      //     fs.rename('public/output/img/test' + i + '.png', 'public/output/img/' + j + 'letitgo.png',
+      //       function(err) {
+      //         if (err) console.log('ERROR: ' + err);
+      //       });
+      //   }
+      // }
 
-  // Listen for data messages
-  socket.on('info', function(info) {
-    let message = {
-      id: socket.id,
-      info: info
-    }
-    // Send data to output clients
-    outputs.emit('message', message);
-  });
+      // fs.readdir('public/output/img/', (err, files) => {
+      //   console.log("there areeeeeeeee" + files.length);
+      //   let length = {
+      //     num: files.length,
+      //   }
+      //   outputs.emit('length', length);
+      // });
+    });
 
-  // Listen to image events
-  ss(socket).on('file', function(stream, data) {
-    let filename = path.basename(data.name);
-    stream.pipe(fs.createWriteStream('public/output/' + filename));
-    console.log(filename);
-    outputs.emit('image', filename);
   });
 
   // Listen for all client to disconnect

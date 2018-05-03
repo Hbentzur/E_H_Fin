@@ -34,9 +34,18 @@ let userText;
 // Pic
 let nameOfPic;
 
+//Galaxy pic;
+let img;
+
 function preload() {
   myFont = loadFont('DIN BLACK.ttf');
   bears = loadImage("./bears.jpeg");
+
+  //Galaxy
+  img1 = loadImage('./galaxy/galaxy1.png');
+  img2 = loadImage('./galaxy/galaxy2.png');
+  img3 = loadImage('./galaxy/galaxy3.png');
+
 }
 
 function setup() {
@@ -69,7 +78,7 @@ function setup() {
   // Name of Pic
   // let nameOfPic = "test" + floor(random(0,100)) + ".png";
 
-  let nameOfPic = "test" + floor(random(0,100)) + ".png";
+  //let nameOfPic = "test" + floor(random(0, 100)) + ".png";
 
 
   // Canvas to blob
@@ -79,40 +88,47 @@ function setup() {
       console.log(file);
       let stream = ss.createStream();
       // upload a file to the server.
-      ss(socket).emit('file', stream, {
-        name: nameOfPic
-      });
+      ss(socket).emit('file', stream);
       ss.createBlobReadStream(file).pipe(stream);
     });
   }
 
   //Picmode
-  function Picmode() {
-    firstbutton.hide();
-    console.log("Pic mode");
-  }
+  // function Picmode() {
+  //   firstbutton.hide();
+  //   console.log("Pic mode");
+  // }
 
   // Remove disconnected users
-socket.on('disconnected', function(id) {
-  delete users[id];
-});
+  socket.on('disconnected', function(id) {
+    delete users[id];
+  });
 
 }
 
 function displayText() {
   background(40, 40, 40);
-  textSize(20);
+  image(img1, 0, 0, window.innerWidth, window.innerHeight);
+  textSize(55);
   textFont(myFont);
   textAlign(CENTER);
-  fill(250, 200, 200);
+  fill(255);
   userText = writingField.value();
-  text(userText, w / 2 - 100, h / 2 - 200, 200, 200);
+  text(userText, w / 2 - 230, h / 2 - 200, 400, 600);
 
-  //setTimeout(dipToBlack, 3000);
+  submitTextButton.hide();
+  writingField.hide();
+
+  setTimeout(dipToBlack, 3000);
 }
 
 function dipToBlack() {
-  background(40, 40, 40);
+  image(img1, 0, 0, window.innerWidth, window.innerHeight);
+  textSize(80);
+  textFont(myFont);
+  textAlign(CENTER);
+  fill(255);
+  text("Please step \ninto outer space", w / 2 - 230, h / 2 - 200, 500, 500);
 }
 
 function draw() {
